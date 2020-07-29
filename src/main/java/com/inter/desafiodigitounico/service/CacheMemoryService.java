@@ -1,15 +1,16 @@
 package com.inter.desafiodigitounico.service;
 
 import com.inter.desafiodigitounico.dtos.NumberDto;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class CacheMemoryService {
 
+    @Getter
     private static List<NumberDto> cache = new ArrayList<>();
 
     public static void saveInCache(NumberDto numberSequence){

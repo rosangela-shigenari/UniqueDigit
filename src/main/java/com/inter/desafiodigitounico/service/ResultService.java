@@ -2,8 +2,13 @@ package com.inter.desafiodigitounico.service;
 import com.inter.desafiodigitounico.entities.NumberSequence;
 import com.inter.desafiodigitounico.dtos.NumberDto;
 import com.inter.desafiodigitounico.repositories.ResultRepository;
+import com.inter.desafiodigitounico.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public class ResultService {
     @Autowired
     ResultRepository resultRepository;
@@ -15,10 +20,8 @@ public class ResultService {
             return number;
         }
         else{
-            NumberSequence newNumber = new NumberSequence();
-            newNumber.setResult(numberSequence.calculateUniqueDigit());
-            newNumber.setK(numberSequence.getK());
-            newNumber.setN(numberSequence.getN());
+            NumberSequence newNumber = new NumberSequence(numberSequence);
+            CacheMemoryService.saveInCache(numberSequence);
             resultRepository.save(newNumber);
         }
         return numberSequence;

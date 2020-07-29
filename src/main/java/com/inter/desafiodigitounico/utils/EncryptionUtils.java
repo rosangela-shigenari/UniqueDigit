@@ -1,6 +1,6 @@
 package com.inter.desafiodigitounico.utils;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 
@@ -9,10 +9,8 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 
+@Slf4j
 public class EncryptionUtils {
     public static byte[] encryptString(byte[] string){
 
@@ -21,6 +19,7 @@ public class EncryptionUtils {
             encryption.init(Cipher.ENCRYPT_MODE, generateKey().getPublic());
             return encryption.doFinal(string);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException |  InvalidKeyException | IllegalBlockSizeException| BadPaddingException e) {
+            log.error("Erro ao encriptografar o nome/email deste usuário ou usuário não existente!");
             return null;
         }
     }
@@ -31,19 +30,11 @@ public class EncryptionUtils {
             decrypt.init(Cipher.DECRYPT_MODE, generateKey().getPrivate());
             return decrypt.doFinal(string);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException |  InvalidKeyException | IllegalBlockSizeException| BadPaddingException e) {
+            log.error("Erro ao decriptografar o nome/email deste usuário ou usuário não existente!");
             return null;
         }
 
     }
-
-    public static PublicKey getPublicKey(String key) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(key)));
-    }
-
-    public static PrivateKey getPrivateKey(String stringKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(Base64.decodeBase64(stringKey)));
-    }
-
 
     public static KeyPair generateKey() throws NoSuchAlgorithmException {
         final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
